@@ -1,0 +1,45 @@
+import matplotlib.pyplot as plt
+import time
+from fritzconnection.lib.fritzstatus import FritzStatus
+import numpy as np
+
+
+
+
+
+if __name__ == '__main__':
+    ip = input("Enter IP-Adress Please:")
+    password = input("Enter Password Please:")
+    time_in_seconds = input("how long should it get recorded in seconds")
+    fc = FritzStatus(address=ip, password =password)
+    uparray = []
+    downarray = []
+    rangeindex = int(time_in_seconds)* 10
+    t = [x for x in range(0,200,2)]
+    r = [x for x in range(0,rangeindex)]
+
+    index = 0
+    while index<rangeindex:
+        touple = fc.transmission_rate
+        print(index, fc.transmission_rate)
+        up = touple[0]
+        down = touple[1]
+        down = round(float(down/1000000),2)
+        up = round(float(up / 1000000), 2)
+        print(down)
+        downarray.append(down)
+        uparray.append(up)
+        index += 1
+        time.sleep(0.1)
+    #np.ndarray(downarray)
+    #uploadgraph = plt.plot(t,uparray,label="upload")
+    print(t)
+    print(r)
+    plt.plot(r,downarray, color ='r')
+    plt.plot(r,uparray, color ='b')
+    plt.ylim((0,max(np.max(uparray), np.max(downarray))+20))
+    plt.xlabel("Time")
+    plt.ylabel("Megabyte")
+    plt.legend
+    #plt.axis([0,30,0,20])
+    plt.show()
